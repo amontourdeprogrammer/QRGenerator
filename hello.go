@@ -16,12 +16,15 @@ func GenerateQRcode(phrase string) {
 	}
 }
 
+func HandlerBill (w http.ResponseWriter, r *http.Request){
+			fmt.Fprintf(w, "Hello bill :", r)
+	GenerateQRcode(r.URL.Path)
+
+}
+
 func main() {
 	fmt.Printf("Hello, world.\n")
-	GenerateQRcode("je suis Sarah")
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "Hello world",)
-	})
+	http.HandleFunc("/", HandlerBill)
 	http.ListenAndServe(":8080", nil)
 }
 
