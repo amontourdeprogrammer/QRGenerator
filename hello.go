@@ -7,6 +7,7 @@ import (
 	"io"
 	"os"
 	"log"
+	"net/http"
 )
 
 
@@ -33,4 +34,9 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintf(w, "Hello world",)
+	})
+	http.ListenAndServe(":8080", nil)
 }
