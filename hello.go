@@ -1,50 +1,34 @@
 package main
 
 import (
+	"github.com/skip2/go-qrcode"
 	"fmt"
-	"image"
-	"image/png"
-	"io"
-	"os"
 	"log"
 	"net/http"
 )
 
+func GenerateQRcode(phrase string) {
+	err := qrcode.WriteFile(phrase, qrcode.Medium, 256, "qr.png")
+	fmt.Printf("err=", err)
 
-func GenerateQRCode(w io.Writer, code string, version Version) error {
-	size := version.PatternSize()
-	img := image.NewNRGBA(image.Rect(0,0,size,size))
-	return png.Encode(w,img)
+	if err!= nil {
+		log.Fatal(err)
 	}
+}
 
-type Version int8
-func (v Version) PatternSize() int {
- 	return 4*int(v) + 17
-	}
+func HandlerBill (w http.ResponseWriter, r *http.Request){
+			fmt.Fprintf(w, "Hello bill :", r)
+	GenerateQRcode(r.URL.Path)
 
-func handlerRyan(RyanDit http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(RyanDit, "Hey girl, I'm Ryan")
-	}
+}
 
-func handlerJason(JasonDit http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(JasonDit, "Hey girl, I'm jason ")
-	}
 
 func main() {
 	fmt.Printf("Hello, world.\n")
-	file, err := os.Create("qrcode.png")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
 
-	err = GenerateQRCode(file, "555-2368", 1)
-	if err != nil {
-		log.Fatal(err)
-	}
+	http.HandleFunc("/", HandlerBill)
 
-	http.HandleFunc("/toto", handlerJason )
-	http.HandleFunc("/",handlerRyan )
 	http.ListenAndServe(":8080", nil)
 
 }
+
