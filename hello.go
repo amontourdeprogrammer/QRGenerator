@@ -9,25 +9,26 @@ import (
 
 func GenerateQRcode(phrase string) {
 	err := qrcode.WriteFile(phrase, qrcode.Medium, 256, "qr.png")
-	fmt.Printf("err=", err)
-
 	if err!= nil {
 		log.Fatal(err)
 	}
 }
 
 func HandlerBill (w http.ResponseWriter, r *http.Request){
-			fmt.Fprintf(w, "Hello bill :", r)
-	GenerateQRcode(r.URL.Path)
-
+	URLparam := r.URL.Path[1:]
+	if len(URLparam) != 0 {
+		fmt.Fprintf(w, "Hello %s", URLparam )
+		GenerateQRcode(URLparam)
+		http.ServeFile(w, r, "qr.png")
+	} else {
+		fmt.Fprintf(w,"Hello bill !\nNothing to see here.\n")
+	}	
 }
 
 
 func main() {
 	fmt.Printf("Hello, world.\n")
-
 	http.HandleFunc("/", HandlerBill)
-
 	http.ListenAndServe(":8080", nil)
 
 }
