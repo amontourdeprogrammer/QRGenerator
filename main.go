@@ -19,8 +19,7 @@ func HandlerBill (w http.ResponseWriter, r *http.Request){
 	URLparam := r.URL.Path[1:]
 	if len(URLparam) != 0 {
 				GenerateQRcode(URLparam)
-				fmt.Println(URLparam)
-				fmt.Fprintf(w, "<h1>Here is the QRcode for %s</h1> <a href='img/qr.png' download>Dowload it</a><img src='/img/qr.png'> ", URLparam )
+				fmt.Fprintf(w, "<h1>Here is the QRcode for %s</h1> <a href='img/qr.png' download><button>Download!</button></a><img src='/img/qr.png'> ", URLparam )
 			}else{
 		fmt.Fprintf(w,"Hello bill !\nNothing to see here.\n")
 	}
