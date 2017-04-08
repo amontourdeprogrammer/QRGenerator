@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 )
 
 func GenerateQRcode(phrase string) {
@@ -33,12 +34,15 @@ func HandlerFavicon (w http.ResponseWriter, r *http.Request) {
 
 
 func main() {
-	fmt.Printf("Hello, world.\n")
+	port := os.Getenv("PORT")
+
+	if port == "" {
+		port = "8080"
+	}
 	http.HandleFunc("/", HandlerBill)
 	http.HandleFunc("/favicon.ico", HandlerFavicon)
 	http.Handle("/img/", http.StripPrefix("/img/", http.FileServer(http.Dir("img"))))
-	http.ListenAndServe(":8080", nil)
-
+	http.ListenAndServe(":"+ port, nil)
 
 }
 
